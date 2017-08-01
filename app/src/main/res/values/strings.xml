@@ -1,3 +1,16 @@
 <resources>
-  <string name="app_name">demoholter</string>
+  <string name="app_name">DemoHolter</string>
+  <string name="action_scan_ble_device">Scan BLE Device</string>
+  <string name="action_disconnect">Disconnect</string>
+
+  <string name="select_device">SELECT BLE DEVICE</string>
+  <string name="scanning">Scanning a devices...</string>
+  <string name="device_list_fragment_tag">device_list_fragment_tag</string>
+
+  <string name="request_permission_access_coarse_location_title">This app needs location access</string>
+  <string name="request_permission_access_coarse_location_content">Please grant location access so this app can detect ble device.</string>
+  <string name="request_permission_external_storage_title">This app needs external storage access</string>
+  <string name="request_permission_external_storage_content">Please grant external storage access so this app can save the measurement data.</string>
+  <string name="request_permission_read_phone_state_title">This app needs read phone state</string>
+  <string name="request_permission_read_phone_state_content">Please grant read phone state so this app can save the measurement data.</string>
 </resources>

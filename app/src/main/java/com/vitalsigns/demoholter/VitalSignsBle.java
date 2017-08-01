@@ -149,7 +149,7 @@ class VitalSignsBle implements BleCmdService.OnServiceListener
     public void onServiceConnected(ComponentName componentName, IBinder iBinder)
     {
       mBleService = ((BleService.LocalBinder)iBinder).getService();
-      mBleService.Initialize(GlobalData.mBleIntDataQueue, BleCmdService.HW_TYPE.CARDIO);
+      mBleService.Initialize(GlobalData.mBleIntDataQueue, BleCmdService.HW_TYPE.HR);
       mBleService.RegisterClient(VitalSignsBle.this);
     }
 

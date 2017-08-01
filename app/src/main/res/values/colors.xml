@@ -3,4 +3,11 @@
   <color name="colorPrimary">#3F51B5</color>
   <color name="colorPrimaryDark">#303F9F</color>
   <color name="colorAccent">#FF4081</color>
+  <color name="list_section_header_background">#424242</color>
+  <color name="list_header_text">#9E9E9E</color>
+  <color name="list_item_background">#323334</color>
+  <color name="list_divider">#757575</color>
+  <color name="list_button">#2196F3</color>
+  <color name="list_secondary_text">#EEEEEE</color>
+  <color name="list_primary_text">#FAFAFA</color>
 </resources>
