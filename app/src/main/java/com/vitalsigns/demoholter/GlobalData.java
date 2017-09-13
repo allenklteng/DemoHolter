@@ -3,11 +3,14 @@ package com.vitalsigns.demoholter;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -18,15 +21,51 @@ import java.util.concurrent.BlockingQueue;
 
 public class GlobalData extends Application
 {
-
+  public static boolean Recording = false;
   public static VitalSignsBle BleControl;
+  private static       Toast                 mToast              = null;
+  private static final Handler               toastReleaseHandler = new Handler();
   private static final int                   BLE_DATA_QUEUE_SIZE = 128;
+  public static final int                    DEFAULT_VREF = 2420;
+  public static final int                    MAX_CHANNEL_NUMBER = 2;
+  public static final int                    DEFAULT_CHANNEL_COUNT = 2;
+  public static final int                    DEFAULT_CHART_COUNT = 3;
   public static        BlockingQueue<int []> mBleIntDataQueue    = new ArrayBlockingQueue<>(BLE_DATA_QUEUE_SIZE);
 
   public static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
   public static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 2;
   public static final int PERMISSION_REQUEST_READ_PHONE_STATE = 3;
 
+  public static void showToast(Context mContext, String message, int toastDuration)
+  {
+    if (mToast != null)
+    {
+      mToast.setText(message);
+      mToast.setDuration(toastDuration);
+
+      toastReleaseHandler.removeCallbacksAndMessages(null);
+      toastReleaseHandler.postDelayed(new Runnable()
+      {
+        @Override
+        public void run() {
+          mToast = null;
+        }
+      }, toastDuration == Toast.LENGTH_LONG ? 3500 : 2000);
+    }
+    else
+    {
+      mToast = Toast.makeText(mContext, message, toastDuration);
+      mToast.show();
+
+      toastReleaseHandler.postDelayed(new Runnable()
+      {
+        @Override
+        public void run() {
+          mToast = null;
+        }
+      }, toastDuration == Toast.LENGTH_LONG ? 3500 : 2000);
+    }
+  }
 
   public static boolean requestPermissionForAndroidM(final Activity activity)
   {
