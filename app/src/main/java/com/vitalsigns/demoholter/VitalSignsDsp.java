@@ -118,13 +118,18 @@ public class VitalSignsDsp
     }
 
     /// [AT-PM] : Stop BLE ; 10/25/2016
-    GlobalData.BleControl.stop();
+    GlobalData.BleControl.stop(new VitalSignsBle.BleStop()
+    {
+      @Override
+      public void onStop()
+      {
+        /// [AT-PM] : Stop DSP ; 10/25/2016
+        DSP.Stop();
 
-    /// [AT-PM] : Stop DSP ; 10/25/2016
-    DSP.Stop();
-
-    waitDspExecuteCompleteHandler.postDelayed(waitDspExecuteCompleteRunnable, WAIT_DSP_EXECUTE_COMPLETE_INIT_DELAY);
-    Log.d(LOG_TAG , "CAPTURE THREAD =====> STOPPED");
+        waitDspExecuteCompleteHandler.postDelayed(waitDspExecuteCompleteRunnable, WAIT_DSP_EXECUTE_COMPLETE_INIT_DELAY);
+        Log.d(LOG_TAG , "CAPTURE THREAD =====> STOPPED");
+      }
+    });
   }
 
   /**
