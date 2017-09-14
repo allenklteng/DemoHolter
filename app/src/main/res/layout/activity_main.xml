@@ -7,6 +7,62 @@
   android:layout_height="match_parent"
   tools:context="com.vitalsigns.demoholter.MainActivity">
 
+  <TextView
+    android:text="@string/heart_rate_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/heart_rate_text"
+    android:gravity="center_horizontal"
+    android:layout_centerHorizontal="true"
+    android:layout_margin="@dimen/title_padding"
+    android:textSize="@dimen/value_text_size"
+    android:textColor="@color/heart_rate_value_text_color"/>
+
+  <TextView
+    android:text="0"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/heart_rate_value"
+    android:layout_margin="@dimen/title_padding"
+    android:textSize="@dimen/value_text_size"
+    android:textColor="@color/heart_rate_value_text_color"
+    android:layout_toEndOf="@id/heart_rate_text"/>
+
+  <LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/heart_rate_text"
+    android:id="@+id/chart_block"
+    android:layout_above="@+id/fab">
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/title_padding"
+      android:id="@+id/chart1">
+
+    </FrameLayout>
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/title_padding"
+      android:id="@+id/chart2"
+      android:layout_below="@id/chart1">
+
+    </FrameLayout>
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/title_padding"
+      android:id="@+id/chart3"
+      android:layout_below="@id/chart2">
+
+    </FrameLayout>
+  </LinearLayout>
+
   <android.support.design.widget.FloatingActionButton
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -16,5 +72,6 @@
     android:id="@+id/fab"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
-    android:layout_margin="@dimen/fab_margin"/>
+    android:layout_margin="@dimen/fab_margin"
+    />
 </RelativeLayout>

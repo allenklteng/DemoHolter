@@ -2,10 +2,40 @@
   <string name="app_name">DemoHolter</string>
   <string name="action_scan_ble_device">Scan BLE Device</string>
   <string name="action_disconnect">Disconnect</string>
-
   <string name="select_device">SELECT BLE DEVICE</string>
   <string name="scanning">Scanning a devices...</string>
+
+  <string name="heart_rate_text">HR:</string>
+  <string name="info_default_value"> -- </string>
+  <string name="chart_fragment_display_type">Display Type</string>
+  <string name="chart_fragment_display_type_normal">normal mode</string>
+  <string name="chart_fragment_tag">Chart</string>
+  <string name="chart_fragment_channel_number">channel number</string>
+  <string name="chart_fragment_chart_number">chart number</string>
+  <string name="chart_fragment_channel_count">channel count</string>
+  <string name="chart_fragment_y_axis_unit">y axis unit</string>
+  <string name="chart_fragment_title">title</string>
+  <string name="chart_fragment_voltage_gain">voltage gain</string>
+  <string name="chart_fragment_voltage_offset">voltage offset</string>
+  <string name="chart_fragment_voltage_vref">voltage vref</string>
+  <string name="unit_setting_fragment_default_gain">1</string>
+  <string name="unit_setting_fragment_default_offset">0</string>
+  <string name="unit_setting_fragment_default_y_axis_unit">millivolt</string>
+  <string-array name="chart_title_array">
+    <item>Lead I</item>
+    <item>Lead II</item>
+    <item>Lead III</item>
+  </string-array>
   <string name="device_list_fragment_tag">device_list_fragment_tag</string>
+  <string name="preference_file_key">CONFIGURATION</string>
+  <string name="preference_channel_count">CHANNEL_COUNT</string>
+  <string name="preference_y_axis_unit_array">Y_AXIS_UNIT_ARRAY</string>
+  <string name="preference_gain_array">GAIN_ARRAY</string>
+  <string name="preference_offset_array">OFFSET_ARRAY</string>
+  <string name="preference_vref_array">VREF_ARRAY</string>
+  <string name="chart_1_lead">Chart 1</string>
+  <string name="chart_2_lead">Chart 2</string>
+  <string name="chart_3_lead">Chart 3</string>
 
   <string name="request_permission_access_coarse_location_title">This app needs location access</string>
   <string name="request_permission_access_coarse_location_content">Please grant location access so this app can detect ble device.</string>

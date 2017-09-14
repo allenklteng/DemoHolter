@@ -2,6 +2,14 @@
 <android.support.percent.PercentRelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
+  <view
+    class="com.vitalsigns.demoholter.ChartView"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_alignParentStart="true"
+    app:layout_widthPercent="100%"
+    android:id="@+id/chart_view"/>
 </android.support.percent.PercentRelativeLayout>
