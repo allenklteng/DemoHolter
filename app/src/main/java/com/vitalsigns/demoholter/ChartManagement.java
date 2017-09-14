@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -81,5 +82,38 @@ public class ChartManagement
       }
       chartFragmentArray.clear();
     }
+  }
+
+  public void startToDrawChart(int sampleRate) {
+    for(int idx = 0; idx < chartCount; idx++) {
+      chartFragmentArray.get(idx).startRecord(sampleRate);
+    }
+  }
+
+  public void stopToDrawChart(float fEndTime) {
+    for(int idx = 0; idx < chartCount; idx++) {
+      chartFragmentArray.get(idx).stopRecord(fEndTime);
+    }
+  }
+
+  public String[] drawChart(float[][] data, float fEndTime) {
+    String[] dataRangeArray;
+    int dataRangeArrayIndex = 0;
+    for(int idx = 0; idx < chartCount; idx++) {
+
+      dataRangeArray = chartFragmentArray.get(idx).drawChart(data[idx], fEndTime);
+
+      System.arraycopy(dataRangeArray, 0, threeChartDataRangeString, dataRangeArrayIndex, 3);
+      dataRangeArrayIndex += 3;
+    }
+    return threeChartDataRangeString;
+  }
+
+  public float[] getXWindowRange() {
+    float[] xWindowRange = new float[chartCount];
+    for(int idx = 0; idx < chartCount; idx++) {
+      xWindowRange[idx] = chartFragmentArray.get(idx).getXWindowRange();
+    }
+    return xWindowRange;
   }
 }

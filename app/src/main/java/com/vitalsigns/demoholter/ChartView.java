@@ -25,12 +25,11 @@ public class ChartView extends View
 {
   private final String LOG_TAG = "ChartView:";
   private Context mContext;
+  private int sampleRate;
   /// Painting tools
   private Paint axisPaint;
   private Paint curvePaint;
-  private Paint PeakPaint;
   private Paint backgroundPaint;
-  private Paint framePaint;
   private TextPaint unitTextPaint;
   private TextPaint titleTextPaint;
   private TextPaint xLabelTextPaint;
@@ -42,6 +41,7 @@ public class ChartView extends View
   private final float verticalGridUnit = 40f; /// 0.04 seconds / 1mm
   private final float horizontalGridUnit = 0.1f; /// 1mV /1mm
 
+  private float xCoordinateInterval;
   private float xWindow;
   private int xLabelCount = 3;
   private int yLabelCount = 8;
@@ -51,13 +51,14 @@ public class ChartView extends View
   private int yLabelCoordinateInterval;
   private float xGridCoordinateInterval;
   private float yGridCoordinateInterval;
-  private float horizontalGridCount; /// mV/horizintalLine
+  private float horizontalGridCount; /// mV/horizontalLine
   private float verticalGridCount; /// 40ms/verticalLine
   private int labelTextShift;
   private float minX = 0;
   private float maxX = 0;
   private float minY = 0;
   private float maxY = 0;
+  private float yPixelPerValue;
   private String titleText = "chart";
   private String unitText = "millivolt";
   private int chartNumber;
@@ -93,9 +94,6 @@ public class ChartView extends View
   private float[] ptsData3;
   private float[] savePtsData;
   private int dataLength;
-  private float[] fPeakXArray;
-  private float[] fPeakYArray;
-  private int nPeakCnt;
 
   public interface OnDrawChartFinishListener{
     public void drawChartFinish();
@@ -204,11 +202,7 @@ public class ChartView extends View
     drawXLabel(canvas);
     if(dataLength > 1) {
       if(ptsData != null) {
-          drawCurveByCanvasDrawLine(canvas);
-      }
-
-      if(fPeakXArray != null && nPeakCnt > 0) {
-        drawPeakByCanvasDrawPoint(canvas);
+        drawCurveByCanvasDrawLine(canvas);
       }
     }
   }
@@ -239,19 +233,13 @@ public class ChartView extends View
 
     curvePaint = new Paint();
     curvePaint.setColor(ContextCompat.getColor(mContext,R.color.chart_line));
-    curvePaint.setStrokeWidth(3);
+    curvePaint.setStrokeWidth(1);
     curvePaint.setDither(true);
     curvePaint.setStyle(Paint.Style.STROKE);
     curvePaint.setStrokeJoin(Paint.Join.ROUND);
     curvePaint.setStrokeCap(Paint.Cap.ROUND);
     curvePaint.setPathEffect(new CornerPathEffect(10));
     curvePaint.setAntiAlias(true);
-
-    PeakPaint = new Paint();
-    PeakPaint.setColor(ContextCompat.getColor(mContext,R.color.chart_peak));
-    PeakPaint.setStyle(Paint.Style.FILL);
-    PeakPaint.setStrokeWidth(5);
-
 
     backgroundPaint = new Paint();
     backgroundPaint.setFilterBitmap(true);
@@ -373,6 +361,62 @@ public class ChartView extends View
     yLabelValueInterval = (maxY - minY) / yLabelCount;
   }
 
+  public void setDataSource(float[] data, int length) {
+    dataLength = length;
+    if(dataLength < 2) {
+      return;
+    }
+    /// Use for canvas drawLines
+
+    ptsData[1] = mBottomSide - (data[0] - minY) * yPixelPerValue;
+    for(int idx = 1; idx < dataLength; idx++) {
+        if(idx < dataLength - 1) {
+          ptsData[idx * 4 + 1] = mBottomSide - (data[idx] - minY) * yPixelPerValue;
+          ptsData[idx * 4 - 1] = ptsData[idx * 4 + 1];
+        }
+    }
+    ptsData[(dataLength - 2) * 4 + 3] = mBottomSide - (data[dataLength - 1] - minY) * yPixelPerValue;
+    /// Set x array
+    ptsData[0] = xAxisData[0];
+    for(int idx = 1; idx < dataLength; idx++)
+    {
+      if(idx < dataLength - 1)
+      {
+        ptsData[idx * 4] = xAxisData[idx];
+        ptsData[idx * 4 - 2] = ptsData[idx * 4];
+      }
+    }
+    ptsData[4 * (dataLength - 2) + 2] = xAxisData[dataLength - 1];
+  }
+
+  public void setSampleRate(int sampleRateInput) {
+    if(sampleRateInput <= 0)
+    {
+      Log.d(LOG_TAG,  " sampleRate = " + sampleRateInput);
+      return;
+    }
+    else
+    {
+      sampleRate = sampleRateInput;
+    }
+    float totalXPoint = (float)Math.ceil(xWindow * sampleRate);
+    xCoordinateInterval = (mRightSide - mLeftSide) / totalXPoint;
+    /// Create x position array
+    xAxisData = new float[(int)totalXPoint];
+    for(int idx = 0; idx < (int)totalXPoint; idx++) {
+      xAxisData[idx] = mLeftSide + (idx * xCoordinateInterval);
+    }
+    /// Create y drawlines array
+    ptsData = new float[(int)(4 * totalXPoint)];
+    Log.d(LOG_TAG, " maxX = " + maxX +
+                   " minX = " + minX +
+                   " totalXPoint = " + totalXPoint +
+                   " mRightSide = " + mRightSide +
+                   " mLeftSide = " + mLeftSide +
+                   " sampleRate = " + sampleRate +
+                   " xCoordinateInterval = " + xCoordinateInterval);
+  }
+
   public void setTitleTextSize(int textSize) {
     titleTextPaint.setTextSize(textSize);
     unitTextPaint.setTextSize(textSize - 1);
@@ -391,8 +435,24 @@ public class ChartView extends View
     yLabelCoordinateInterval = (mBottomSide - mTopSide) / yLabelCount;
   }
 
+  public void setXRange(float minX, float maxX) {
+    this.minX = minX;
+    this.maxX = maxX;
+  }
+
+  public void setYRange(float minY, float maxY) {
+    this.minY = minY;
+    this.maxY = maxY;
+    yLabelValueInterval = (maxY - minY) / yLabelCount;
+    yPixelPerValue =  mTotalYInPixel / (maxY - minY);
+  }
+
   public void setTitleTextTypeface(Typeface typeface) {
     titleTextPaint.setTypeface(typeface);
+  }
+
+  public float getXVWindow() {
+    return xWindow;
   }
 
   private String formatYValue(double value) {
@@ -499,13 +559,4 @@ public class ChartView extends View
     canvas.drawLines(ptsData, 0, 4 * (dataLength - 1), curvePaint);
   }
 
-  private void drawPeakByCanvasDrawPoint(Canvas canvas)
-  {
-    int nPeakIdx = 0;
-    while(nPeakIdx < nPeakCnt)
-    {
-      canvas.drawCircle(fPeakXArray[nPeakIdx], fPeakYArray[nPeakIdx], DRAW_CIRCLE_RADIUS, PeakPaint);
-      nPeakIdx++;
-    }
-  }
 }
