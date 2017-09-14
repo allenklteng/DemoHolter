@@ -84,13 +84,11 @@ class VitalSignsBle implements BleCmdService.OnErrorListener
   private BleService           mBleService     = null;
   private boolean              mBleServiceBind = false;
   private Context              mContext        = null;
-  private BlockingQueue<int[]> mIntDataQueue   = null;
 
   VitalSignsBle(@NotNull Context context, @NotNull BleEvent event)
   {
     mContext = context;
     mBleEvent = event;
-    mIntDataQueue = new ArrayBlockingQueue<int[]>(512);
 
     Intent intent = new Intent(context, BleService.class);
     mBleServiceBind = context.bindService(intent, mBleServiceConnection, BIND_AUTO_CREATE);
@@ -105,7 +103,7 @@ class VitalSignsBle implements BleCmdService.OnErrorListener
     public void onServiceConnected(ComponentName componentName, IBinder iBinder)
     {
       mBleService = ((BleService.LocalBinder)iBinder).getService();
-      mBleService.Initialize(mIntDataQueue, BleCmdService.HW_TYPE.CARDIO);
+      mBleService.Initialize(GlobalData.mBleIntDataQueue, BleCmdService.HW_TYPE.CARDIO);
       mBleService.RegisterClient(null, VitalSignsBle.this, null, null, null);
     }
 
