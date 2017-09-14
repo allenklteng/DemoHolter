@@ -4,6 +4,7 @@
   <string name="action_disconnect">Disconnect</string>
   <string name="select_device">SELECT BLE DEVICE</string>
   <string name="scanning">Scanning a devices...</string>
+  <string name="package_identity">6de52fc8e6d875480aff796ffc56fdf4</string>
 
   <string name="heart_rate_text">HR:</string>
   <string name="info_default_value"> -- </string>

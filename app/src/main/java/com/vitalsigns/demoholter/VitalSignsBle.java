@@ -226,11 +226,34 @@ class VitalSignsBle implements BleCmdService.OnServiceListener
   }
 
   /**
+   * Get device resolution
+   * @return resolution
+   */
+  short resolution()
+  {
+    return ((mBleService != null) ? (short)mBleService.GetResolution() : 0);
+  }
+
+  /**
+   * Get device channel count
+   * @return channelCount
+   */
+  int channelCount()
+  {
+    return ((mBleService != null) ? (short)mBleService.GetChannelCount() : 0);
+  }
+
+  /**
    * Get device is connected or not
    * @return true if connected
    */
   boolean isConnect()
   {
     return ((mBleService != null) && mBleService.IsBleConnected());
+  }
+
+  String getAddress()
+  {
+    return  ((mBleService != null) ?  mBleService.GetBleDevice().getAddress().replace(":", "") : "");
   }
 }
