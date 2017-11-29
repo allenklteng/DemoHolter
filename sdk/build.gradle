@@ -1,2 +1,2 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('VitalSigns_Sdk.aar'))
+artifacts.add("default", file('sdk.aar'))

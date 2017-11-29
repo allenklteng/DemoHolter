@@ -38,6 +38,24 @@ class VitalSignsBle implements BleCmdService.OnErrorListener
   private int mCheckStopTimeout = 100;
 
   @Override
+  public void chartNumberConfig(int i, int i1, int[] ints)
+  {
+
+  }
+
+  @Override
+  public void pedometerData(int i, ArrayList<BlePedometerData> arrayList)
+  {
+
+  }
+
+  @Override
+  public void sleepData(int i, int i1, ArrayList<BleSleepData> arrayList)
+  {
+
+  }
+
+  @Override
   public void bleConnectionLost(String s)
   {
     Log.d(LOG_TAG, "bleConnectionLost:" + s);
