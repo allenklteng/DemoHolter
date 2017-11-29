@@ -34,4 +34,5 @@ dependencies {
   compile 'com.android.support:support-v4:25.2.0'
   compile 'com.android.support:design:25.2.0'
   compile project(':sdk')
+  compile project(':utility')
 }

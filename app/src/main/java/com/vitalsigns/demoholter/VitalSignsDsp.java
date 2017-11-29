@@ -8,6 +8,7 @@ import android.os.Process;
 import android.util.Log;
 
 
+import com.vitalsigns.sdk.dsp.holter.Constant;
 import com.vitalsigns.sdk.dsp.holter.Dsp;
 import com.vitalsigns.sdk.utility.*;
 import com.vitalsigns.sdk.utility.Utility;
@@ -244,12 +245,12 @@ public class VitalSignsDsp
    */
   public int PrepareJniData(float fStartTime,
                             float fEndTime,
-                            int nChart1LeadType,
-                            int nChart2LeadType,
-                            int nChart3LeadType,
-                            int nChart1LineType,
-                            int nChart2LineType,
-                            int nChart3LineType)
+                            Constant.LEAD_TYPE nChart1LeadType,
+                            Constant.LEAD_TYPE nChart2LeadType,
+                            Constant.LEAD_TYPE nChart3LeadType,
+                            Constant.LINE_TYPE nChart1LineType,
+                            Constant.LINE_TYPE nChart2LineType,
+                            Constant.LINE_TYPE nChart3LineType)
   {
     dspDataOutDataCnt = DSP.ReadData(fStartTime,
                                      fEndTime,

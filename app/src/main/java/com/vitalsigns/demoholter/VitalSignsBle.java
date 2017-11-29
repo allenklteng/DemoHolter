@@ -13,9 +13,12 @@ import android.util.Log;
 import com.vitalsigns.sdk.ble.BleCmdService;
 import com.vitalsigns.sdk.ble.BleService;
 import com.vitalsigns.sdk.ble.BleStatus;
+import com.vitalsigns.sdk.utility.Utility;
+import com.vitalsigns.utility.thread;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -36,24 +39,6 @@ class VitalSignsBle implements BleCmdService.OnErrorListener
   private Handler mHandlerConnect = null;
   private Handler mHandlerCheckStop = null;
   private int mCheckStopTimeout = 100;
-
-  @Override
-  public void chartNumberConfig(int i, int i1, int[] ints)
-  {
-
-  }
-
-  @Override
-  public void pedometerData(int i, ArrayList<BlePedometerData> arrayList)
-  {
-
-  }
-
-  @Override
-  public void sleepData(int i, int i1, ArrayList<BleSleepData> arrayList)
-  {
-
-  }
 
   @Override
   public void bleConnectionLost(String s)
@@ -141,7 +126,8 @@ class VitalSignsBle implements BleCmdService.OnErrorListener
       mContext.unbindService(mBleServiceConnection);
     }
 
-    Utility.releaseHandlerThread(mServiceThread);
+    thread.releaseHandlerThread(mServiceThread);
+    mServiceThread = null;
   }
 
   /**

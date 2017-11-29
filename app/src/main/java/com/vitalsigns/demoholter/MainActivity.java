@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vitalsigns.sdk.ble.scan.DeviceListFragment;
+import com.vitalsigns.sdk.dsp.holter.Constant;
 
 
 public class MainActivity extends AppCompatActivity
@@ -50,13 +51,7 @@ public class MainActivity extends AppCompatActivity
   private TextView      heartRateText;
 
   /// [CC] : Chart setting ; 10/27/2016
-  private float drawChartAccumulateTime;
-  private int nChart1LeadType;
-  private int nChart2LeadType;
-  private int nChart3LeadType;
-  private final static int LEAD_1 = 0;
-  private final static int LEAD_2 = 1;
-  private final static int LEAD_3 = 2;
+  private float              drawChartAccumulateTime;
 
   private int[] chartIdArray;
   private float[][] chartData;
@@ -292,9 +287,6 @@ public class MainActivity extends AppCompatActivity
       vrefArray[idx] = GlobalData.DEFAULT_VREF;
     }
 
-    nChart1LeadType = LEAD_1;
-    nChart2LeadType = LEAD_2;
-    nChart3LeadType = LEAD_3;
 
   }
 
@@ -365,14 +357,9 @@ public class MainActivity extends AppCompatActivity
 
       Log.d(LOG_TAG, "DEBUG start : " + startTimeInMilliSecond + " end : " + drawChartAccumulateTime);
 
-      VSDsp.PrepareJniData(startTimeInMilliSecond,
-                           drawChartAccumulateTime,
-                           nChart1LeadType,
-                           nChart2LeadType,
-                           nChart3LeadType,
-                           1,
-                           1,
-                           1);
+      VSDsp.PrepareJniData(startTimeInMilliSecond, drawChartAccumulateTime,
+                           Constant.LEAD_TYPE.LEAD_1, Constant.LEAD_TYPE.LEAD_2, Constant.LEAD_TYPE.LEAD_3,
+                           Constant.LINE_TYPE.FILTER, Constant.LINE_TYPE.FILTER, Constant.LINE_TYPE.FILTER);
       chartData[0] = VSDsp.GetDrawLead1();
       chartData[1] = VSDsp.GetDrawLead2();
       chartData[2] = VSDsp.GetDrawLead3();
