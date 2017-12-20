@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity
     chartTitle = getResources().getStringArray(R.array.chart_title_array);
     chartManagement = new ChartManagement(getApplicationContext(), getSupportFragmentManager(), GlobalData.DEFAULT_CHART_COUNT * CHART_DATA_RANGE_COUNT);
     chartDefaultSetting();
-    getHeartRateHandler = new Handler();
 
     if(GlobalData.requestPermissionForAndroidM(this))
     {
@@ -230,7 +229,8 @@ public class MainActivity extends AppCompatActivity
     drawChartThreadHandler = new Handler(drawChartThread.getLooper());
     drawChartThreadHandler.postDelayed(drawChartRunnable, DRAW_CHART_DELAY);
 
-    ///getHeartRateHandler.postDelayed(getHeartRateRunnable, CHECK_HR_STATUS_LIGHT_INTERVAL);
+    getHeartRateHandler = new Handler();
+    getHeartRateHandler.postDelayed(getHeartRateRunnable, CHECK_HR_STATUS_LIGHT_INTERVAL);
   }
 
   private void stopRecord()
@@ -355,8 +355,6 @@ public class MainActivity extends AppCompatActivity
         startTimeInMilliSecond = drawChartAccumulateTime - xWindowRange[0] * MILLISECOND_TO_SECOND;
       }
 
-      Log.d(LOG_TAG, "DEBUG start : " + startTimeInMilliSecond + " end : " + drawChartAccumulateTime);
-
       VSDsp.PrepareJniData(startTimeInMilliSecond, drawChartAccumulateTime,
                            Constant.LEAD_TYPE.LEAD_1, Constant.LEAD_TYPE.LEAD_2, Constant.LEAD_TYPE.LEAD_3,
                            Constant.LINE_TYPE.FILTER, Constant.LINE_TYPE.FILTER, Constant.LINE_TYPE.FILTER);
@@ -386,7 +384,7 @@ public class MainActivity extends AppCompatActivity
 
       nHeartRate      = (int)VSDsp.GetHeartRateAvg();
       if (nHeartRate <= 0) {
-        heartRateText.setText("--");
+        heartRateText.setText("0");
       }
       else {
         heartRateText.setText(String.valueOf(nHeartRate));
