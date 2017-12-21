@@ -198,7 +198,9 @@ public class MainActivity extends AppCompatActivity
         return ;
       }
 
-      if(!VSDsp.Start(0.4f,100f,true,true,gainArray, vrefArray, GlobalData.BleControl.getAddress()))
+      /// [WC] : High pass filter cut off frequency:3f, Low pass filter cut off frequency:100f
+
+      if(!VSDsp.Start(3f,100f,true,true,gainArray, vrefArray, GlobalData.BleControl.getAddress()))
       {
         Log.d(LOG_TAG, "VSDsp.Start() == false");
 
