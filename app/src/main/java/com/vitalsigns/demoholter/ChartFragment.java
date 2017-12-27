@@ -113,7 +113,6 @@ public class ChartFragment extends Fragment
 
   private void processControls() {
     showChart();
-    // TODO : setListener();
     dataRangeString = new String[] {defaultValueString, defaultValueString, defaultValueString};
   }
 
@@ -136,8 +135,6 @@ public class ChartFragment extends Fragment
 
   public void stopRecord(float accumulateTime) {
     bRecording = false;
-    //TODO:PanLimit
-    //setPanLimits(accumulateTime / MILLISECOND_TO_SECOND);
   }
 
   public String[] drawChart(float[] data, float fEndTime) {

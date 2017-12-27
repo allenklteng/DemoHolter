@@ -2,6 +2,7 @@ package com.vitalsigns.demoholter;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -146,8 +148,11 @@ public class MainActivity extends AppCompatActivity
   {
     super.onStop();
 
-    /// [AT-PM] : Release background HandlerThread ; 07/20/2017
-    Utility.releaseHandlerThread(mBackgroundThread);
+    if(mBackgroundThread != null)
+    {
+      mBackgroundThread.interrupt();
+      mBackgroundThread.quit();
+    }
     mBackgroundThread = null;
   }
 
@@ -405,6 +410,23 @@ public class MainActivity extends AppCompatActivity
     {
       GlobalData.BleControl.destroy();
     }
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event)
+  {
+
+    if (keyCode == KeyEvent.KEYCODE_BACK)
+    {
+      Intent intentHome = new Intent(Intent.ACTION_MAIN);
+      intentHome.addCategory(Intent.CATEGORY_HOME);
+      intentHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intentHome);
+
+      return true;
+    }
+
+    return super.onKeyDown(keyCode, event);
   }
 
   private VitalSignsBle.BleEvent mBleEvent = new VitalSignsBle.BleEvent()
