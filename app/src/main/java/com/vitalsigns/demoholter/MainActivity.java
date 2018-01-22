@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.vitalsigns.sdk.ble.scan.DeviceListFragment;
 import com.vitalsigns.sdk.dsp.holter.Constant;
 
-
 public class MainActivity extends AppCompatActivity
   implements DeviceListFragment.OnEvent,
              ChartView.OnDrawChartFinishListener
@@ -87,7 +86,9 @@ public class MainActivity extends AppCompatActivity
     xWindowRange = new float[GlobalData.DEFAULT_CHART_COUNT];
     getChartLayoutSize();
     chartTitle = getResources().getStringArray(R.array.chart_title_array);
-    chartManagement = new ChartManagement(getApplicationContext(), getSupportFragmentManager(), GlobalData.DEFAULT_CHART_COUNT * CHART_DATA_RANGE_COUNT);
+    chartManagement = new ChartManagement(getApplicationContext(),
+                                          getSupportFragmentManager(),
+                                          GlobalData.DEFAULT_CHART_COUNT * CHART_DATA_RANGE_COUNT);
     chartDefaultSetting();
 
     if(GlobalData.requestPermissionForAndroidM(this))
@@ -118,6 +119,15 @@ public class MainActivity extends AppCompatActivity
     //noinspection SimplifiableIfStatement
     if(id == R.id.action_scan_ble_device)
     {
+      if((GlobalData.BleControl != null) &&
+         (GlobalData.BleControl.isConnect()))
+      {
+        GlobalData.showToast(mActivity,
+                             getString(R.string.action_disconnect_first_if_is_connection),
+                             Toast.LENGTH_SHORT);
+        return (true);
+      }
+
       if(GlobalData.requestPermissionForAndroidM(this))
       {
         Log.d(LOG_TAG, "scanBle @ onOptionsItemSelected()");
@@ -125,6 +135,7 @@ public class MainActivity extends AppCompatActivity
       }
       return (true);
     }
+
     if(id == R.id.action_disconnect)
     {
       GlobalData.BleControl.disconnect();
@@ -179,6 +190,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View view)
     {
+      if(GlobalData.BleControl == null)
+      {
+        if(GlobalData.requestPermissionForAndroidM(MainActivity.this))
+        {
+          initBle();
+          VSDsp = new VitalSignsDsp(MainActivity.this);
+          Log.d(LOG_TAG, "onClick");
+        }
+
+        return;
+      }
+
       /// [AT-PM] : Check connected ; 06/16/2017
       if(!GlobalData.BleControl.isConnect())
       {
@@ -448,7 +471,6 @@ public class MainActivity extends AppCompatActivity
     }
   };
 
-
   @Override
   public void onBleDeviceSelected(String bleDeviceAddress)
   {
@@ -481,4 +503,7 @@ public class MainActivity extends AppCompatActivity
     }
   }
 
+  @Override
+  public void onCancelDialog() {
+  }
 }
