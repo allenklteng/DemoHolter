@@ -2,13 +2,17 @@ package com.vitalsigns.demoholter;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +27,7 @@ import android.widget.Toast;
 
 import com.vitalsigns.sdk.ble.scan.DeviceListFragment;
 import com.vitalsigns.sdk.dsp.holter.Constant;
+import com.vitalsigns.sdk.utility.RequestPermission;
 
 public class MainActivity extends AppCompatActivity
   implements DeviceListFragment.OnEvent,
@@ -171,6 +176,12 @@ public class MainActivity extends AppCompatActivity
   {
     if(GlobalData.requestPermissionForAndroidM(this))
     {
+      if(GlobalData.BleControl == null)
+      {
+        initBle();
+        VSDsp = new VitalSignsDsp(MainActivity.this);
+      }
+
       /// [AT-PM] : Call a dialog to scan device ; 05/05/2017
       DeviceListFragment fragment = DeviceListFragment.newInstance(DeviceListFragment.ACTION_SCAN_BLE_DEVICE,
                                                                    DeviceListFragment.STYLE_DEFAULT_BLACK);
@@ -192,13 +203,6 @@ public class MainActivity extends AppCompatActivity
     {
       if(GlobalData.BleControl == null)
       {
-        if(GlobalData.requestPermissionForAndroidM(MainActivity.this))
-        {
-          initBle();
-          VSDsp = new VitalSignsDsp(MainActivity.this);
-          Log.d(LOG_TAG, "onClick");
-        }
-
         return;
       }
 
@@ -505,5 +509,85 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   public void onCancelDialog() {
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         @NonNull String[] permissions,
+                                         @NonNull int[] grantResults)
+  {
+    if((grantResults == null) || (grantResults.length == 0))
+    {
+      return;
+    }
+    switch (requestCode)
+    {
+      case RequestPermission.PERMISSION_REQUEST_COARSE_LOCATION:
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+          Log.d(LOG_TAG, "coarse location permission granted");
+          if(GlobalData.BleControl == null)
+          {
+            initBle();
+            VSDsp = new VitalSignsDsp(MainActivity.this);
+          }
+        }
+        else
+        {
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+          builder.setTitle("Functionality limited");
+          builder.setMessage("Since location access has not been granted, this app will not be able to discover devices.");
+          builder.setPositiveButton(android.R.string.ok, null);
+          builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+              finish();
+            }
+          });
+          builder.show();
+        }
+        break;
+      case RequestPermission.PERMISSION_REQUEST_EXTERNAL_STORAGE:
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+          Log.d(LOG_TAG, "external storage permission granted");
+        }
+        else
+        {
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+          builder.setTitle("Functionality limited");
+          builder.setMessage("Since external storage has not been granted, this app will not be able to discover devices.");
+          builder.setPositiveButton(android.R.string.ok, null);
+          builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+              finish();
+            }
+          });
+          builder.show();
+        }
+        break;
+      case RequestPermission.PERMISSION_REQUEST_READ_PHONE_STATE:
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+          Log.d(LOG_TAG, "read phone state granted");
+        }
+        else
+        {
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+          builder.setTitle("Functionality limited");
+          builder.setMessage("Since read phone state has not been granted, this app will not be able to discover devices.");
+          builder.setPositiveButton(android.R.string.ok, null);
+          builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+              finish();
+            }
+          });
+          builder.show();
+        }
+        break;
+    }
   }
 }
